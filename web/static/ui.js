@@ -6,17 +6,28 @@ const UI = class{
         };
         this.timer    = {
             blink       : { current: 0, max: 120 },
+            feeling     : { current: 0, max: 120 },
         };
         this.node = { 
             content     : document.querySelector('.content'), 
             avatar      : {
-                bg : document.querySelector('.left'), 
-                fg : document.querySelector('.left span'),
+                background  : document.querySelector('.left'), 
+                face        : document.querySelector('.left span'),
+                eyes        : document.querySelector('.left span + span'),
             },
             mind        : document.querySelector('.right'),
             input       : document.querySelector('.footer')
         };
         this.interval.update = setInterval( UIUpdate, 30);
+    }
+
+    debug( text ){
+        const txt = document.createElement('div');
+        txt.className = `message`;
+        txt.textContent = text;
+        this.node.mind.appendChild(txt);
+        this.node.mind.scrollTop = this.node.mind.scrollHeight;
+    
     }
 
     print(text, type='system'){
@@ -28,13 +39,10 @@ const UI = class{
     }
 
     setBackground( classname ){
-        this.node.avatar.bg.setAttribute('aria-status', classname);
+        this.debug(`setBackground('${classname}')`);
+        this.node.avatar.background.setAttribute('aria-status', classname);
     }
     
-    setForeground( classname ){
-        this.node.avatar.fg.setAttribute('aria-status', classname);
-    }
-
     updateTimers(){
         for(var timer in this.timer){
             if( this.timer[timer].current < this.timer[timer].max ) 
@@ -59,7 +67,7 @@ const UI = class{
 
     update(){
         this.updateTimers();
-        this.node.avatar.fg.setAttribute('aria-blink', this.timer.blink.current > this.timer.blink.max-5);
+        adam.update();
     }
 
 };

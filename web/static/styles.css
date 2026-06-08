@@ -34,45 +34,69 @@ body {
     height: 400px;
 }
 
+/* ---------------------------------------
+              Avatar Styles 
+---------------------------------------*/ 
+.left[aria-status=static],
 .left {
-    background: #061c0d;
-    width: 256px;
-    height: 256px;
+    background      : #061c0d;
     background-image: url('gfx/static.png');
+    width           : 256px;
+    height          : 256px;
+    position        : relative;
 }
 .left[aria-status=thinking]{
     background-image: url('gfx/thinking.gif');
 }
-.left[aria-status=static]{
-    background-image: url('gfx/static.png');
+#face[aria-status=idle],
+#face{
+    background-image: url('gfx/IDLE.png');
+    width           : 100%;
+    height          : 100%;
+    position        : absolute;
+    top             : 0px;
+    left            : 0px;
+    display         : inline-block;
+    background-size : contain;
+    image-rendering : pixelated;
 }
-.left span{
-    width: 256px;
-    height: 256px;
-    background-image: url('gfx/a.png');
-    display: inline-block;
-    background-size: contain;
-    image-rendering: pixelated;
+#face[aria-status=sleeping] {
+    background-image: url('gfx/SLEEP.png');
 }
-.left span[aria-status=thinking]{
-    /* background-image: url('gfx/a-thinking.png'); */
+/* Eyes Overlay */
+#face + span {
+    background-image: none;
+    position        : absolute;
+    width           : 100%;
+    height          : 100%;
+    display         : inline-block;
+    background-size : contain;
+    image-rendering : pixelated;
 }
-.left span[aria-blink=true]{
-    background-image: url('gfx/a-blink.png') !important;
+#face[aria-status=thinking] + span {
+    background-image: url('gfx/THINKING.png');
 }
-
+#face[aria-blink=true] + span{
+    background-image: url('gfx/BLINK.png') !important;
+}
+/* ---------------------------------------
+              Debug Box 
+---------------------------------------*/ 
 .right {
     background: #aaa064;
     width: calc(100% - 256px);
     height: 256px;
 }
-
+/* ---------------------------------------
+              Chat Log 
+---------------------------------------*/ 
 .content {
     width: 100%;
     height: calc(100% - 314px);
     background: #aaa064;
     margin-bottom: 0;
 }
+.right *,
 .content * {
     border: none;
     background-color: #3a3623;
@@ -81,7 +105,11 @@ body {
     font-size: 16px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: 800;
+    overflow: hidden;
 }
+/* ---------------------------------------
+              Input Box 
+---------------------------------------*/ 
 .footer {
     width: 100%;
     height: 32px;

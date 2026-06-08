@@ -6,15 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A.D.A.M. Entity</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
-    <script src="{% static 'adam.js' %}"></script>
+    <script src="{% static 'face.js' %}"></script>
+    <script src="{% static 'phonem.js' %}"></script>
+    <script src="{% static 'emotion.js' %}"></script>
+    <script src="{% static 'states.js' %}"></script>
     <script src="{% static 'ui.js' %}"></script>
+    <script src="{% static 'adam.js' %}"></script>
 </head>
 <body>
 
     <div class="container">
 
         <div class="top-section">
-            <div class="box left"><span></span></div>
+            <div class="box left"><span id="face"></span><span id="eyes"></span></div>
             <div class="box right"></div>
         </div>
 

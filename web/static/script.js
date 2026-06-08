@@ -15,7 +15,7 @@ document.querySelector('.footer').addEventListener('keydown', async function(eve
             console.error('Error durante el proceso:', error);
             ui.print(`Hubo un error al procesar tu solicitud: ${error}`, 'error');
         } finally {
-            adam.idle();
+            adam.setState( State.IDLE );
             ui.unlock();
         }
     }

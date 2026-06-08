@@ -1,16 +1,68 @@
+
 const Adam = class{
     constructor( name ){
-        this.name   = name;
-        this.phonem = null;
+        this.name       = name;
+        this.phonem     = Phonem.M;
+        this.state      = null;
+        this.emotion    = null;
+        this.face       = null;
+        this.blink      = false;
+        this.setState( State.IDLE );
     }
 
-    setFace( type ){
-        ui.setForeground(type);
+    setEmotion( emotion ){
+        ui.debug(`setEmotion(${emotion})`);
+        this.emotion = emotion;
+        ui.node.avatar.face.setAttribute('aria-emotion', this.emotion);
+
+        switch( this.emotion ){
+            case Emotion.NEUTRAL:
+                this.setFace( Face.IDLE );
+                break;
+            case Emotion.SADNESS:
+                this.setFace( Face.IDLE );
+                break;
+            case Emotion.SATISFACTION:
+                this.setFace( Face.SMILE );
+                break;
+        }
+    }
+
+    setState( state ){
+        ui.debug(`setState(${state})`);
+        this.state = state;        
+        ui.node.avatar.face.setAttribute('aria-status', this.state);
+
+        switch( this.state ){
+            case State.IDLE:
+                this.setEmotion( Emotion.NEUTRAL );
+                ui.setBackground('static');
+                break;
+            case State.THINKING:                
+                this.setEmotion( Emotion.NEUTRAL );
+                ui.setBackground('thinking');
+                break;
+            case State.TALKING:
+                break;
+            case State.SLEEPING:
+                this.setFace( Face.SLEEPING );
+                break;
+            case State.EXPRESSING:
+                break;
+            default:
+                return this.setState( State.IDLE );
+        }
+    }
+
+    setFace( face ){
+        ui.debug(`setFace(${face})`);
+        this.face = face;
+        ui.node.avatar.face.setAttribute('aria-face'  , this.face);
     }
 
     async think( prompt ){
-        ui.setBackground('thinking');
-        this.setFace('thinking');
+        ui.debug(`think(...)`);
+        adam.setState( State.THINKING );
         
         // Enviar la petición con el texto introducido a LLM
         const response = await fetch('https://ollama.iskarion.ddns.net/api/generate', {
@@ -29,12 +81,9 @@ const Adam = class{
         return data.response; 
     }
 
-    idle(){
-        this.setFace('idle');
-        ui.setBackground('static');
-    }
-
     async say( text ){
+        ui.debug(`say(...)`);        
+        adam.setState( State.TALKING );
         ui.print( text , 'bot');
         await this.talk(text);
     }
@@ -47,7 +96,7 @@ const Adam = class{
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ 
-                text: text 
+                text: `${text}`, 
             })
         });
         if (!audioResponse.ok) throw new Error('Error al descargar el audio');
@@ -56,5 +105,9 @@ const Adam = class{
         const audio = new Audio(audioUrl);
         console.log(audio);            
         audio.play();
+    }
+
+    update() {
+        ui.node.avatar.face.setAttribute('aria-blink'   , ui.timer.blink.current >= ui.timer.blink.max - 5);
     }
 };
