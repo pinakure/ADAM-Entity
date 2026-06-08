@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A.D.A.M. Entity</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <script src="{% static 'adam.js' %}"></script>
+    <script src="{% static 'ui.js' %}"></script>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="top-section">
+            <div class="box left"><span></span></div>
+            <div class="box right"></div>
+        </div>
+
+        <div class="content"></div>
+
+        <input class="footer" type="text"/>
+
+    </div>
+
+</body>
+<script src="{% static 'script.js' %}"></script>
+</html>

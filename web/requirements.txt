@@ -1,0 +1,6 @@
+gunicorn
+PyJWT<3
+requests
+django
+django-allauth
+django-cors-headers

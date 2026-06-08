@@ -1,0 +1,27 @@
+networks:
+  proxy_sql-network:
+    external: true
+  proxy_primary-network:
+    external: true
+
+services:
+  adam-service:
+    build: /src/adam/web
+    container_name: adam
+    hostname: adam
+    networks:
+      - proxy_sql-network
+      - proxy_primary-network
+    volumes:
+      - /src/adam/web:/src/adam/
+      - /static/adam:/static/adam
+      - /media/adam:/media/adam
+      - /var/log:/var/log
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      KC_SECRET: ${KC_SECRET}
+      DJANGO_SECRET: ${DJANGO_SECRET}
+    restart: unless-stopped
