@@ -1,21 +1,24 @@
 const ui = new UI();
 const adam = new Adam('smiker');
 
-document.querySelector('.footer').focus();
-document.querySelector('.footer').addEventListener('keydown', async function(event) {
+ui.node.input.focus();
+ui.node.content.addEventListener('click', function(){ ui.node.input.focus(); });
+ui.node.input.addEventListener('keydown', async function(event) {
     // 1. Detectar si se pulsa Enter y asegurar que el texto no esté vacío ni sean solo espacios
     if (event.key === 'Enter' && this.value.trim() !== '') {
         const prompt = this.value.trim();
         if(prompt[0]=='/') return adam.handleCommand(prompt);
         ui.lock();
         ui.print(prompt, 'user');
-        ui.print("[THINKING]", 'temporary');
         try {
+            ui.print("Thinking", 'temporary');
             const reply = await adam.think( prompt ); 
+            document.querySelectorAll('.temporary').forEach((e) => { e.remove() });
+            ui.print("Pronnouncing", 'temporary');
             await adam.say( reply );
         } catch (error) {
-            console.error('Error durante el proceso:', error);
-            ui.print(`Hubo un error al procesar tu solicitud: ${error}`, 'error');
+            ui.debug(error, 'error');
+            ui.print(error, 'error');
         } finally {
             adam.setState( State.IDLE );
             ui.unlock();

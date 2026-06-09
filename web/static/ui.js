@@ -23,13 +23,12 @@ const UI = class{
         this.interval.update = setInterval( UIUpdate, 30);
     }
 
-    debug( text ){
+    debug( text , type=''){
         const txt = document.createElement('div');
-        txt.className = `message`;
+        txt.className = `message ${type}`;
         txt.textContent = text;
         this.node.mind.appendChild(txt);
         this.node.mind.scrollTop = this.node.mind.scrollHeight;
-    
     }
 
     print(text, type='system'){
@@ -46,7 +45,6 @@ const UI = class{
     }
 
     setBackground( classname ){
-        this.debug(`setBackground('${classname}')`);
         this.node.avatar.background.setAttribute('aria-status', classname);
     }
 

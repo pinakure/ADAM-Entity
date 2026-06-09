@@ -195,6 +195,14 @@ PHONEM OVERRIDES
 /* ---------------------------------------
               Message Styles 
 ---------------------------------------*/ 
+.temporary {
+    background-image: url('gfx/progress.gif');
+    background-position: 0% 50%;
+    background-size: 16px 16px;
+    image-rendering: pixelated;
+    padding-left: 16px;
+    background-repeat: no-repeat;
+}
 .right .message {
     color: #ffffff;
     text-shadow: 1px -2px 0px #000;
@@ -202,7 +210,6 @@ PHONEM OVERRIDES
 .message {
     border: none;
     color:#2735b5;
-    max-height: 18px;
     line-height: 18px;
     overflow: visible;
 }
@@ -212,6 +219,9 @@ PHONEM OVERRIDES
 }
 .message.user {
     color:#10e4e4;
+}
+.message.error {
+    color:#e4107a;
 }
 .message.bot {
     background-color: #061c0d;
@@ -235,4 +245,13 @@ PHONEM OVERRIDES
     opacity: 0;
     display: none;  /* Completely removes the element from the layout */
   }
+}
+
+audio {
+    height: 16px;
+    border-radius: none;
+    width: 100%;
+    filter: invert(1) sepia(100%) contrast(97%) saturate(150%) hue-rotate(414deg) saturate(3.5) brightness(70%);
+    background: #000;
+    color: #0ff;
 }
