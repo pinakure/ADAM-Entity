@@ -1,5 +1,13 @@
+:root {
+    --bg-color: #c9c9b5;
+}
+
+html {
+    height: 100%;
+}
+
 body, div {
-    border: 3px inset #8888;
+    border: 3px inset #c9c9b580;
 }
 
 * {
@@ -9,7 +17,7 @@ body, div {
     border-radius: 0px;
     line-height: 16px;
 }
-
+/* Amiga Workbench Logo */
 svg {
     position: absolute;
     top: 0px;
@@ -23,16 +31,14 @@ svg {
     animation-delay: 1s; 
 }
 
-html {
-    height: 100%;
-}
 
 body {
-    background: #c9c9b5;
+    background: var(--bg-color);
     padding: 20px;
     height: 100%;
     min-height: 100vh;
     overflow: hidden;
+    background-image: linear-gradient(322deg, #fff0, #b2cfb4), linear-gradient(314deg, #fff0, #747983), linear-gradient(135deg, #fff0, #a9aab5);
 }
 
 .container {
@@ -141,7 +147,7 @@ PHONEM OVERRIDES
     width       : calc(100% - 256px);
     height      : 256px;
     overflow-x  : hidden;
-    overflow-y  : auto;
+    overflow-y  : hidden;
 }
 /* ---------------------------------------
               Chat Log 
@@ -191,9 +197,9 @@ PHONEM OVERRIDES
     font-family: 'tiny';
 }
 .right * { 
-    font-size: 16px;
+    font-size: 32px;
     font-weight: 400;
-    font-family: 'graph35+';
+    font-family: 'tiny';
 }
 .footer {
     font-size: 32px;

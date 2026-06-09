@@ -10,6 +10,7 @@ const Adam = class{
         this.timer      = { enabled: false, value:0, subject:'' };
         this.model      = null;
         this.tokens     = [];
+        this.setModel( 'ryukk:latest' );
         this.setModel( 'llama3' );
         this.setState( State.IDLE );
         this.enqueueText( "Hola, soy Adam-01, estoy aqui para darte respuestas a preguntas que todavía no sabes que tienes.");
@@ -173,6 +174,7 @@ const Adam = class{
         audio.setAttribute('controls', true);
         ui.node.content.append(audio);
         audio.play();
+        audio.addEventListener('stop', function(){ ui.debug('Audio has been stopped.');});
         adam.stopTimer();
     }
 
