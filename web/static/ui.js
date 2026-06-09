@@ -6,7 +6,9 @@ const UI = class{
         };
         this.timer    = {
             blink       : { current: 0, max: 120 },
-            feeling     : { current: 0, max: 120 },
+        };
+        this.countdown = {
+            emotion     : { current: 0, count: 60 , callback: null,},
         };
         this.node = { 
             content     : document.querySelector('.content'), 
@@ -37,10 +39,20 @@ const UI = class{
         this.node.content.appendChild(txt);
         this.node.content.scrollTop = this.node.content.scrollHeight;
     }
+ 
+    inject( html ){
+        this.node.content.innerHTML = this.node.content.innerHTML + html;
+        this.node.content.scrollTop = this.node.content.scrollHeight;
+    }
 
     setBackground( classname ){
         this.debug(`setBackground('${classname}')`);
         this.node.avatar.background.setAttribute('aria-status', classname);
+    }
+
+    setCountdown( countdown_key, callback=function(){} ){
+        this.countdown[countdown_key].callback = callback;
+        this.countdown[countdown_key].current = this.countdown[countdown_key].count;
     }
     
     updateTimers(){
@@ -49,6 +61,14 @@ const UI = class{
                 this.timer[timer].current++;
             else
                 this.timer[timer].current=0;
+        }
+        for(var countdown in this.countdown){
+            if( this.countdown[countdown].current > 0)  
+                this.countdown[countdown].current--;
+            else if(this.countdown[countdown].callback){
+                this.countdown[countdown].callback();
+                this.countdown[countdown].callback=null;
+            }
         }
     }
 
@@ -63,6 +83,8 @@ const UI = class{
         this.node.input.disabled = false;
         this.node.input.placeholder = "";
         this.node.input.focus(); // Devolver el foco al cuadro de texto
+        /* Elimina mensajes temporales */
+        document.querySelectorAll('.temporary').forEach((o)=>{ o.remove(); });
     }
 
     update(){

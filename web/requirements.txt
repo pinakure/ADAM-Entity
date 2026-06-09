@@ -4,3 +4,4 @@ requests
 django
 django-allauth
 django-cors-headers
+emoji

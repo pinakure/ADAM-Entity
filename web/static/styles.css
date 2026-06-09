@@ -1,9 +1,26 @@
+body, div {
+    border: 3px inset #8888;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    border: 3px inset #8888;
     border-radius: 0px;
+    line-height: 16px;
+}
+
+svg {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border: none;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 1000;
+    animation: fadeout 0.5s ease forwards;
+    animation-delay: 1s; 
 }
 
 html {
@@ -15,7 +32,6 @@ body {
     padding: 20px;
     height: 100%;
     min-height: 100vh;
-    font-family: Arial, sans-serif;
     overflow: hidden;
 }
 
@@ -28,6 +44,12 @@ body {
     display: flex;
     gap: 20px;
     margin-bottom: 20px;
+}
+.bottom-section {
+    flex-direction  : column;
+    display         :inline-block;
+    width           : 100%;
+    height          : calc(100% - 282px);
 }
 
 .box {
@@ -50,20 +72,23 @@ body {
 }
 #face[aria-status=idle],
 #face{
-    background-image: url('gfx/IDLE.png');
-    width           : 100%;
-    height          : 100%;
-    position        : absolute;
-    top             : 0px;
-    left            : 0px;
-    display         : inline-block;
-    background-size : contain;
-    image-rendering : pixelated;
+    background-image    : url('gfx/IDLE.png');
+    width               : 100%;
+    height              : 100%;
+    position            : absolute;
+    top                 : 0px;
+    left                : 0px;
+    display             : inline-block;
+    background-size     : contain;
+    background-repeat   : no-repeat;
+    image-rendering     : pixelated;
 }
 #face[aria-status=sleeping] {
     background-image: url('gfx/SLEEP.png');
 }
-/* Eyes Overlay */
+/* ---------------------------------------
+                Eyes Overlay
+---------------------------------------*/ 
 #face + span {
     background-image: none;
     position        : absolute;
@@ -73,58 +98,141 @@ body {
     background-size : contain;
     image-rendering : pixelated;
 }
-#face[aria-status=thinking] + span {
+#face[aria-status=thinking] {
     background-image: url('gfx/THINKING.png');
 }
 #face[aria-blink=true] + span{
     background-image: url('gfx/BLINK.png') !important;
 }
+#face[aria-face=SMILE] + span{
+    background-image: url('gfx/SMILE.png') !important;
+}
+/* Cambiar parpadeo por zzz.... si está durmiendo */
+#face[aria-status=sleeping][aria-blink=true] + span {
+    background-image: url('gfx/ZZZ.png') !important;
+}
+/* Cara de Tristeza */
+#face[aria-face=CRY] {
+    background-image: url('gfx/CRY.png') !important;
+}
+/* Cara de Amor */
+#face[aria-face=LOVE] {
+    background-image: url('gfx/LOVE.png') !important;
+}
+/* Corazones animados */
+#face[aria-face=LOVE] + span{
+    background-image: url('gfx/love.gif') !important;
+}
+/* ---------------------------------------
+PHONEM OVERRIDES 
+---------------------------------------*/ 
+#face[aria-status=sleeping][aria-blink=true] + span {
+}
 /* ---------------------------------------
               Debug Box 
 ---------------------------------------*/ 
 .right {
-    background: #aaa064;
-    width: calc(100% - 256px);
-    height: 256px;
+    background       : #212031;
+    background-image : url('gfx/logo.png');
+    background-repeat: no-repeat;
+    background-size: 218px 246px;
+    image-rendering: pixelated;
+    background-position: 50% 50%;
+    width       : calc(100% - 256px);
+    height      : 256px;
+    overflow-x  : hidden;
+    overflow-y  : auto;
 }
 /* ---------------------------------------
               Chat Log 
 ---------------------------------------*/ 
 .content {
-    width: 100%;
-    height: calc(100% - 314px);
-    background: #aaa064;
+    width       : 100%;
+    height      : calc(100% - 32px);
+    background  : #07020f;
     margin-bottom: 0;
-}
-.right *,
-.content * {
-    border: none;
-    background-color: #3a3623;
-    color: #ece2a7;
-    line-height: 16px;
-    font-size: 16px;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: 800;
-    overflow: hidden;
+    border      : none;
+    overflow-x  : hidden;
+    overflow-y  : auto;
 }
 /* ---------------------------------------
               Input Box 
 ---------------------------------------*/ 
+.footer:hover,
+.footer:active,
+.footer::placeholder,
 .footer {
     width: 100%;
     height: 32px;
-    background: #27b548;
+    border: none;
+    outline: none;
+    background: #052009;
+    color: #27b548;
+}
+.footer:hover,
+.footer:focus{
+    background: #0b4915;
+}
+/* ---------------------------------------
+              Typography 
+---------------------------------------*/ 
+.right * { 
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'graph35+';
+}
+.footer {
+    font-size: 32px;
+    font-family: 'm4geek_caps';
+    text-transform: uppercase;
+}
+.content * {
+    font-size: 32px;
+    font-weight: 400;
+    font-family: 'ff6';
 }
 
-/* 
-@media (max-width: 768px) {
-    .top-section {
-        flex-direction: column;
-    }
+/* ---------------------------------------
+              Message Styles 
+---------------------------------------*/ 
+.right .message {
+    color: #ffffff;
+    text-shadow: 1px -2px 0px #000;
+}
+.message {
+    border: none;
+    color:#2735b5;
+    max-height: 18px;
+    line-height: 18px;
+    overflow: visible;
+}
+.message.user::before {
+    content: '> ';
+    color:#27a0b5;
+}
+.message.user {
+    color:#10e4e4;
+}
+.message.bot {
+    background-color: #061c0d;
+    color:#27b548;
+}
 
-    .left,
-    .right {
-        flex: none;
-        width: 100%;
-    }
-} */
+
+/* ---------------------------------------
+              Animation 
+---------------------------------------*/ 
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+    display: block;
+  }
+  99% {
+    opacity: 0;
+    display: block; /* Keeps layout space occupied until the fade ends */
+  }
+  100% {
+    opacity: 0;
+    display: none;  /* Completely removes the element from the layout */
+  }
+}

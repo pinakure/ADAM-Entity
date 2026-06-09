@@ -1,9 +1,47 @@
-function Phonem(){
+const Phonem = { 
+    a : 'A',
+    e : 'EBG',
+    i : 'ICDRZ',
+    o : 'O',
+    u : 'U',
+};
+
+const ProPhonem = {
+    /* VOCALS */
+    A : 'a',
+    E : 'e',
+    I : 'i',
+    O : 'o',
+    U : 'u',
+    /* OCLUSIVE */
+    B : 'bilabial',
+    P : 'bilabial',
+    T : 'dental',
+    D : 'dental',
+    K : 'velar',
+    G : 'velar',
+    /* FRICATIVE */
+    F : 'labiodental',
+    Z : 'interdental',
+    S : 'alveolic',
+    J : 'velar',
+    /* AFRICATED */
+    CH : 'palatal',
+    /* NASAL */
+    M : 'bilabial',
+    N : 'alveolic',
+    Ñ : 'palatal',
+    /* LATERAL LIQUID */
+    L : 'liquid',
+    Y : 'liquid',
+    /* VIBRANT LIQUID */
+    RR : 'vibrant',
+    R  : 'vibrant',
 
 }
+
 Phonem.prototype.M = 'm';
 /*------------------------------------------------------------------
-VOCÁLICAS
 
 /a/: Vocal abierta y central.
 /e/: Vocal semiabierta y anterior.

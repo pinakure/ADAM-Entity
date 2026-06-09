@@ -10,6 +10,15 @@ const Adam = class{
         this.setState( State.IDLE );
     }
 
+    handleCommand(command){
+        switch(command.toLowerCase()){
+            case '/smile':  return this.setEmotion( Emotion.SATISFACTION );
+            case '/love':   return this.setEmotion( Emotion.LOVE );
+            case '/cry':    return this.setEmotion( Emotion.SADNESS );
+            case '/sleep':  return this.setState( State.SLEEPING );
+        }
+    }
+
     setEmotion( emotion ){
         ui.debug(`setEmotion(${emotion})`);
         this.emotion = emotion;
@@ -18,14 +27,23 @@ const Adam = class{
         switch( this.emotion ){
             case Emotion.NEUTRAL:
                 this.setFace( Face.IDLE );
-                break;
+                return ui.setCountdown('emotion', null);
+
             case Emotion.SADNESS:
-                this.setFace( Face.IDLE );
+                this.setFace( Face.CRY );
                 break;
+
+            case Emotion.LOVE:
+                this.setFace( Face.LOVE );
+                break;
+
             case Emotion.SATISFACTION:
                 this.setFace( Face.SMILE );
                 break;
         }
+        /* Switch Automatically to Emotion.NEUTRAL when ui.countdown.emotion.current is 0 */
+        if(this.emotion != Emotion.NEUTRAL) 
+            ui.setCountdown('emotion', function(){ adam.setEmotion( Emotion.NEUTRAL ); });
     }
 
     setState( state ){
@@ -72,7 +90,7 @@ const Adam = class{
             },
             body: JSON.stringify({ 
                 prompt: prompt,
-                model: "gemma4",
+                model: "ryukk:latest",
                 stream: false
             })
         });
@@ -103,7 +121,7 @@ const Adam = class{
         const audioBlob = await audioResponse.blob();
         const audioUrl = URL.createObjectURL(audioBlob);
         const audio = new Audio(audioUrl);
-        console.log(audio);            
+        ui.node.content.append(audio);            
         audio.play();
     }
 

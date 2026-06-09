@@ -6,8 +6,10 @@ document.querySelector('.footer').addEventListener('keydown', async function(eve
     // 1. Detectar si se pulsa Enter y asegurar que el texto no esté vacío ni sean solo espacios
     if (event.key === 'Enter' && this.value.trim() !== '') {
         const prompt = this.value.trim();
+        if(prompt[0]=='/') return adam.handleCommand(prompt);
         ui.lock();
         ui.print(prompt, 'user');
+        ui.print("[THINKING]", 'temporary');
         try {
             const reply = await adam.think( prompt ); 
             await adam.say( reply );
