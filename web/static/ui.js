@@ -16,6 +16,7 @@ const UI = class{
                 background  : document.querySelector('.left'), 
                 face        : document.querySelector('.left span'),
                 eyes        : document.querySelector('.left span + span'),
+                model       : document.querySelector('.left span + span + span'), 
             },
             mind        : document.querySelector('.right'),
             input       : document.querySelector('.footer')

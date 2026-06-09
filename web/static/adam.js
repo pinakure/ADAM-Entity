@@ -8,11 +8,17 @@ const Adam = class{
         this.face       = null;
         this.blink      = false;
         this.timer      = { enabled: false, value:0, subject:'' };
-        this.model      = "llama3";
+        this.model      = null;
         this.tokens     = [];
+        this.setModel( 'llama3' );
         this.setState( State.IDLE );
         this.enqueueText( "Hola, soy Adam-01, estoy aqui para darte respuestas a preguntas que todavía no sabes que tienes.");
         ui.debug(`Token Queue Size: ${this.countTokens()}`);
+    }
+    
+    setModel( model ){
+        this.model = model;        
+        ui.node.avatar.model.innerHTML = this.model;
     }
 
     handleCommand(command){
