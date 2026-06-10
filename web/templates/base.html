@@ -11,7 +11,9 @@
     <script src="{% static 'phonem.js' %}"></script>
     <script src="{% static 'emotion.js' %}"></script>
     <script src="{% static 'states.js' %}"></script>
+    <script src="{% static 'emoji.js' %}"></script>
     <script src="{% static 'ui.js' %}"></script>
+    <script src="{% static 'api.js' %}"></script>
     <script src="{% static 'adam.js' %}"></script>
 </head>
 <body>
@@ -2009,11 +2011,14 @@
         <rect x="160" y="361" width="102" height="1" fill="#000000"/>
     </svg>
     <div class="container">
-
+        {% csrf_token %}
         <div class="top-section">
             <div class="box left"><span id="face"></span><span id="eyes"></span><span id="model"></span></div>
-            <div class="box right"></div>
+            <div class="box right"><span class="disk"></span></div>
         </div>
+        <span id="emotion"></span>
+        <span id="state"></span>
+        <span id="info"></span>
         <div class="bottom-section">
             <div class="content"></div>
             <input class="footer" type="text"/>

@@ -40,7 +40,6 @@ const ProPhonem = {
 
 }
 
-Phonem.prototype.M = 'm';
 /*------------------------------------------------------------------
 
 /a/: Vocal abierta y central.

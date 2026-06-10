@@ -1,10 +1,12 @@
 const ui = new UI();
 const adam = new Adam('smiker');
+adam.initialize();
 
 ui.node.input.focus();
 ui.node.content.addEventListener('click', function(){ ui.node.input.focus(); });
 ui.node.input.addEventListener('keydown', async function(event) {
     // 1. Detectar si se pulsa Enter y asegurar que el texto no esté vacío ni sean solo espacios
+    this.value = emoji2ascii(this.value);
     if (event.key === 'Enter' && this.value.trim() !== '') {
         const prompt = this.value.trim();
         if(prompt[0]=='/') return adam.handleCommand(prompt);

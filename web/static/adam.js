@@ -1,4 +1,10 @@
-
+/*
+    -----------------------------------------------------------------
+    Project Start @ 20260707
+    Pinakure AKA Smiker
+    All Rights Reserved
+    -----------------------------------------------------------------
+*/
 const Adam = class{
     constructor( name ){
         this.name       = name;
@@ -7,53 +13,36 @@ const Adam = class{
         this.emotion    = null;
         this.face       = null;
         this.blink      = false;
+        this.typewriter = { timer: 0, length: 0, quantum: 0 };
         this.timer      = { enabled: false, value:0, subject:'' };
         this.model      = null;
+        this.token      = null;
         this.tokens     = [];
+        this.api        = new AdamAPI( this );
+
+    }
+
+    async initialize(){
         this.setModel( 'ryukk:latest' );
         this.setModel( 'llama3' );
         this.setState( State.IDLE );
-        this.enqueueText( "Hola, soy Adam-01, estoy aqui para darte respuestas a preguntas que todavía no sabes que tienes.");
-        ui.debug(`Token Queue Size: ${this.countTokens()}`);
+        await this.say( "Hola! 😃, mi nombre es Adam Uno.");
+        await this.say( "Listo para operar.");
     }
-    
+
+    /*  -------------------------------------------------------------
+                            INTERFACE / SETTERS
+    //  -----------------------------------------------------------*/
+
     setModel( model ){
-        this.model = model;        
+        this.model = model;
         ui.node.avatar.model.innerHTML = this.model;
-    }
-
-    handleCommand(command){
-        switch(command.toLowerCase()){
-            case '/smile':  return this.setEmotion( Emotion.SATISFACTION );
-            case '/love':   return this.setEmotion( Emotion.LOVE );
-            case '/cry':    return this.setEmotion( Emotion.SADNESS );
-            case '/sleep':  return this.setState( State.SLEEPING );
-            default:
-                return null;
-        }
-    }
-
-    countTokens(){
-        return this.tokens.length;
-    }
-
-    enqueueText( text ){
-        // split in tokens
-        this.tokens = text.split(' ');
-    }
-
-    enqueueToken( word ){
-        this.tokens.shift( word );
-    }
-
-    consumeToken(){
-        if(this.tokens.length==0)return null;
-        return this.tokens.pop();
     }
 
     setEmotion( emotion ){
         // ui.debug(`setEmotion(${emotion})`);
         this.emotion = emotion;
+        ui.node.emotion.innerHTML = this.emotion;
         ui.node.avatar.face.setAttribute('aria-emotion', this.emotion);
 
         switch( this.emotion ){
@@ -73,22 +62,26 @@ const Adam = class{
                 this.setFace( Face.SMILE );
                 break;
         }
-        /* Switch Automatically to Emotion.NEUTRAL when ui.countdown.emotion.current is 0 */
+        /*
+            Switch Automatically to Emotion.NEUTRAL
+            when ui.countdown.emotion.current is 0
+        */
         if(this.emotion != Emotion.NEUTRAL)
-            ui.setCountdown('emotion', function(){ adam.setEmotion( Emotion.NEUTRAL ); });
+            ui.setCountdown('emotion', this.neutral);
     }
 
     setState( state ){
         this.state = state;
+        ui.node.state.innerHTML = this.state;
         ui.node.avatar.face.setAttribute('aria-status', this.state);
 
         switch( this.state ){
             case State.IDLE:
-                this.setEmotion( Emotion.NEUTRAL );
+                this.neutral();
                 ui.setBackground('static');
                 break;
             case State.THINKING:
-                this.setEmotion( Emotion.NEUTRAL );
+                this.neutral();
                 ui.setBackground('thinking');
                 break;
             case State.TALKING:
@@ -115,71 +108,158 @@ const Adam = class{
         this.timer.value   = 0;
     }
 
-    updateTimer(){
-        this.timer.value  += this.timer.enabled ? 30 : 0;
-    }
-
     stopTimer(){
-        var magnitude = this.timer.value > 999 ? 'seconds' : 'ms';
-        ui.debug(`Finished ${ this.timer.subject } in ${magnitude == 'seconds' ? this.timer.value / 1000 : this.timer.value} ${ magnitude }.`);
+        const subject = this.timer.subject;
+        const magnitude = (this.timer.value) > 999 ? 'seconds'
+                                                   : 'ms';
+        const value =parseFloat(
+            (magnitude=='seconds') ? this.timer.value*.001
+                                   : this.timer.value
+        );
+        ui.debug(`Finished ${ subject } in ${value} ${magnitude}.`);
         this.timer.enabled = false;
     }
 
-    async think( prompt ){
-        adam.setState( State.THINKING );
-        adam.startTimer('thinking');
-        // Enviar la petición con el texto introducido a LLM
-        const response = await fetch('https://ollama.iskarion.ddns.net/api/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                prompt  : prompt,
-                model   : adam.model,
-                stream  : false
-            })
-        });
-        if (!response.ok) {
-            adam.stopTimer();
-            throw new Error((await response.json()).error);
-        }
-        const data = await response.json();
+    /*  -------------------------------------------------------------
+                            ADAM SHORTCUTS
+    //  -----------------------------------------------------------*/
+
+    idle()          { adam.setState( State.IDLE );}
+    neutral()       { adam.setEmotion( Emotion.NEUTRAL );}
+    info(text)      { ui.node.info.innerHTML = text; }
+
+    /*  -------------------------------------------------------------
+                          ASYNC / API CALLS
+    //  -----------------------------------------------------------*/
+
+    async error( error ){
         adam.stopTimer();
-        return data.response;
+        throw new Error((await error.json()).error);
+        return null;
+    }
+
+    async think( prompt ){
+        this.setState( State.THINKING );
+        const response = await this.api.think( prompt );
+        return response;
     }
 
     async say( text ){
-        adam.setState( State.TALKING );
-        adam.startTimer('pronnouncing');
-        ui.print( text , 'bot');
-        await this.talk(text);
+        this.startTimer('parsing');
+        const response  = await this.api.tokenize(text);
+        const data      = await (response);
+        this.tokens     = this.tokens.concat( data.tokens );
+        ui.debug(`Enqueued ${ this.tokens.length } tokens.`);
+        this.stopTimer();
     }
 
     async talk( text ){
-        // Enviar a endpoint TTS para descargar y reproducir el audio MP3
-        const audioResponse = await fetch('https://tts.iskarion.ddns.net/v1/text-to-speech/davefx-es', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                text: `${text}`,
-            })
-        });
-        if (!audioResponse.ok) throw new Error('Error al descargar el audio');
-        const audioBlob = await audioResponse.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        audio.setAttribute('controls', true);
+        this.setState( State.TALKING );
+        ui.print( text, 'bot');
+        const audio = await this.api.pronounce( text );
+        // audio.setAttribute('controls', true);
         ui.node.content.append(audio);
-        audio.play();
-        audio.addEventListener('stop', function(){ ui.debug('Audio has been stopped.');});
-        adam.stopTimer();
+        audio.addEventListener('loadedmetadata', (evt) => {
+            const obj = evt.target;
+            obj.setAttribute('duration', obj.duration);
+            obj.play();
+            adam.token.audio = obj;
+            adam.typewriter.length  = adam.token.value.length;
+            adam.typewriter.timer   = 0;
+            adam.typewriter.quantum = adam.token.audio.duration / adam.typewriter.length;        
+            obj.addEventListener('ended', adam.idle);
+        });
+    }
+
+    /*  -------------------------------------------------------------
+                               SPEECH
+    //  -----------------------------------------------------------*/
+    consumeToken(){
+        return (this.tokens.length==0)?null:this.tokens.splice(0,1);
+    }
+    express( emoji ){
+        switch(emoji){
+            case '😀': case '😃': case '😊': case '😊':
+                return this.setEmotion( Emotion.SATISFACTION );
+            case '😥':
+                return this.setEmotion( Emotion.SADNESS );
+            case '😍':case '😘':case '🥰':
+                return this.setEmotion( Emotion.LOVE );
+            default: return ui.debug(`EMOJI: ${emoji}`);
+        }
+    }
+    /*  -------------------------------------------------------------
+                           GLOBAL UPDATE
+    //  -----------------------------------------------------------*/
+    updateTimer(){ this.timer.value += this.timer.enabled ? 30 : 0;}
+    updateTypewriter(){ 
+        if(!this.token)return;
+        this.typewriter.timer += this.typewriter.quantum;
+        if(this.typewriter.timer >= this.typewriter.length ){
+            // this.token = null;
+            this.typewriter.timer = 0;
+            this.typewriter.length = 0;
+        }
+    }
+
+    async updateSpeech(){
+        const is_token = this.consumeToken();
+        if(!is_token){
+            this.token = null;
+            // this.setState( State.IDLE );
+            return null; 
+        }
+        ui.debug("1 Token Consumed");
+        const token = is_token[0];
+        this.token = token;
+        if( token.type=='emoji') {
+            this.express( token.value );
+        } else {
+            await this.talk( token.value );
+        }
     }
 
     update() {
-        ui.node.avatar.face.setAttribute('aria-blink'   , ui.timer.blink.current >= ui.timer.blink.max - 5);
+        ui.node.avatar.face.setAttribute(
+            'aria-blink',
+            ui.timer.blink.current >= ui.timer.blink.max - 5
+        );
+        var tokens = [];
+        adam.tokens.forEach(token => {
+            tokens.push(token.value);
+        });
+        
+        adam.info(adam.token && adam.token.audio ? `
+            AUDIO LEN: ${ adam.token.audio.duration } <br/> 
+            TOKEN LEN: ${ adam.typewriter.length } <br/> 
+            T.QUANTUM: ${ adam.typewriter.quantum } <br/>
+            T.W.TIMER: ${ adam.typewriter.timer } <br/>
+        ` : '');
+
+        // debugger
+        if( adam.state == State.IDLE
+        &&  adam.emotion == Emotion.NEUTRAL ){
+            adam.updateSpeech();
+        }
         adam.updateTimer();
+        adam.updateTypewriter();
     }
+
+    /*  -------------------------------------------------------------
+                          COMMAND HANDLER
+    //  -----------------------------------------------------------*/
+
+    handleCommand(command){
+        ui.node.input.value='';
+        switch(command.toLowerCase()){
+            case '/talk':   return this.setState( State.TALKING );
+            case '/smile':  return this.setEmotion( Emotion.SATISFACTION );
+            case '/love':   return this.setEmotion( Emotion.LOVE );
+            case '/cry':    return this.setEmotion( Emotion.SADNESS );
+            case '/sleep':  return this.setState( State.SLEEPING );
+            default:
+                return null;
+        }
+    }
+
 };

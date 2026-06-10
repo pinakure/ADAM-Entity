@@ -12,6 +12,9 @@ const UI = class{
         };
         this.node = { 
             content     : document.querySelector('.content'), 
+            state       : document.querySelector('#state'), 
+            emotion     : document.querySelector('#emotion'), 
+            info        : document.querySelector('#info'), 
             avatar      : {
                 background  : document.querySelector('.left'), 
                 face        : document.querySelector('.left span'),
