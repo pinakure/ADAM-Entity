@@ -154,7 +154,7 @@ PHONEM OVERRIDES
     position            : absolute;
 }
 .disk {
-    position            : absolute;   
+    position            : sticky;   
     top                 : calc(50% - 124px);
     left                : calc(50% - 109px);
     display             : block;
