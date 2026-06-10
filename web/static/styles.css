@@ -24,7 +24,7 @@ body, div {
 /* Amiga Workbench Logo */
 svg {
     /**/
-    display             : none;
+    /* display             : none; */
     /**/
     position            : absolute;
     top                 : 0px;

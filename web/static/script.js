@@ -1,5 +1,6 @@
 const ui = new UI();
 const adam = new Adam('smiker');
+
 adam.initialize();
 
 ui.node.input.focus();

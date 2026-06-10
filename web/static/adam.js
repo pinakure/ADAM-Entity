@@ -26,8 +26,11 @@ const Adam = class{
         this.setModel( 'ryukk:latest' );
         this.setModel( 'llama3' );
         this.setState( State.IDLE );
+        // Pausa la ejecución hasta que se hace clic una única vez en el elemento
+        await new Promise(resolve => document.addEventListener('click', resolve, { once: true }));
         await this.say( "Hola! 😃, mi nombre es Adam Uno.");
         await this.say( "Listo para operar.");
+
     }
 
     /*  -------------------------------------------------------------
