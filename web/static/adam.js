@@ -157,7 +157,6 @@ const Adam = class{
         this.setState( State.TALKING );
         ui.print( text, 'bot');
         const audio = await this.api.pronounce( text );
-        // audio.setAttribute('controls', true);
         ui.node.content.append(audio);
         audio.addEventListener('loadedmetadata', (evt) => {
             const obj = evt.target;
@@ -193,8 +192,12 @@ const Adam = class{
     //  -----------------------------------------------------------*/
     updateTimer(){ this.timer.value += this.timer.enabled ? 30 : 0;}
     updateTypewriter(){ 
-        if(!this.token)return;
-        this.typewriter.timer += this.typewriter.quantum;
+        if(!this.token){
+            this.phonem = null;
+            return;
+        }
+        this.typewriter.timer += this.typewriter.quantum*6; // I dont have any idea why 6 and not 30 here...
+        this.phonem = this.typewriter.timer < this.typewriter.length ? this.token.value[ parseInt(this.typewriter.timer) ] : null;
         if(this.typewriter.timer >= this.typewriter.length ){
             // this.token = null;
             this.typewriter.timer = 0;
@@ -214,6 +217,7 @@ const Adam = class{
         this.token = token;
         if( token.type=='emoji') {
             this.express( token.value );
+            this.token.audio=false;
         } else {
             await this.talk( token.value );
         }
@@ -229,12 +233,35 @@ const Adam = class{
             tokens.push(token.value);
         });
         
-        adam.info(adam.token && adam.token.audio ? `
-            AUDIO LEN: ${ adam.token.audio.duration } <br/> 
-            TOKEN LEN: ${ adam.typewriter.length } <br/> 
-            T.QUANTUM: ${ adam.typewriter.quantum } <br/>
-            T.W.TIMER: ${ adam.typewriter.timer } <br/>
-        ` : '');
+        if( adam.token && adam.token.type=='emoji' ){
+            adam.info(`\
+TOKEN CONTENT       ${ adam.token.value }
+EMOTION TIME        ${ ui.countdown.emotion.count }
+EMOTION NAME        ${ adam.emotion }
+TIME TO IDLE        ${ ui.countdown.emotion.current }
+`);
+        } else if( adam.token && adam.token.audio){
+            adam.info(`\
+TOKEN CONTENT       ${ adam.token.value } 
+TOKEN LENGTH        ${ adam.typewriter.length } 
+AUDIO LENGTH        ${ adam.token.audio.duration } 
+TYPEWRITER LENGTH   ${ adam.typewriter.length } 
+TYPEWRITER TIMER    ${ parseInt(adam.typewriter.timer) }
+TYPEWRITER QUANTUM  ${ adam.typewriter.quantum.toFixed(4) }
+CURRENT PHONEM      ${ adam.phonem }
+`);
+        } else if( adam.token && !adam.token.audio){
+            adam.info(`\
+TOKEN CONTENT       ${ adam.token.value }
+TOKEN LENGTH        ${ adam.typewriter.length }
+AUDIO LENGTH        ????? 
+TYPEWRITER LENGTH   ${ adam.typewriter.length }
+TYPEWRITER TIMER    ${ parseInt(adam.typewriter.timer) }
+TYPEWRITER QUANTUM  ${ adam.typewriter.quantum.toFixed(4) }
+`);
+        } else {
+            adam.info(``);
+        }
 
         // debugger
         if( adam.state == State.IDLE

@@ -144,21 +144,20 @@ PHONEM OVERRIDES
               Debug Box 
 ---------------------------------------*/ 
 .right {
-    background       : #212031;
-    /* background-image : url('gfx/logo.png'); */
-    background-size: 218px 246px;
-    background-position: 50% 50%;
-    width       : calc(100% - 256px);
-    height      : 256px;
-    overflow-x  : hidden;
-    overflow-y  : hidden;
-    perspective : 1000px;
+    background          : #212031;
+    width               : calc(100% - 320px);
+    height              : 256px;
+    overflow-x          : hidden;
+    overflow-y          : hidden;
+    perspective         : 1000px;
+    right               : 28px;
+    position            : absolute;
 }
 .disk {
     position            : absolute;   
     top                 : calc(50% - 124px);
     left                : calc(50% - 109px);
-    display             : inline-block;
+    display             : block;
     animation           : rotation 7s ease forwards infinite;
     background-image    : url('gfx/logo.png');
     background-size     : 218px 246px;
@@ -222,16 +221,22 @@ PHONEM OVERRIDES
     text-shadow     : 2px 2px 0px #dbdbd6 !important;
 }
 #info {
-    color           : #ffff00;
+    white-space     : pre;
+    color           : #b7f467;
     top             : 288px;
-    top             : 38px;
+    top             : 32px;
     right           : 32px;
-    font-size       : 16px;
+    width           : 25%;
+    height          : 250px;
+    font-size       : 12px;
     position        : absolute;
     /* overflow-y      : hidden; */
-    height          : 16px;
-    line-height     : 16px;
-    text-shadow     : 2px -2px 0px #000 !important;
+    background      : #0008;
+    padding         : 8px;
+    border-radius   : 2px ;
+    line-height     : 10px;
+    font-weight     : 800;
+    text-shadow     : 0px 0px 3px #000 !important;
 }
 
 /* ---------------------------------------
