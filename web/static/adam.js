@@ -8,7 +8,7 @@
 const Adam = class{
     constructor( name ){
         this.name       = name;
-        this.phonem     = Phonem.M;
+        this.phonem     = '';
         this.state      = null;
         this.emotion    = null;
         this.face       = null;
@@ -23,14 +23,15 @@ const Adam = class{
     }
 
     async initialize(){
-        this.setModel( 'ryukk:latest' );
+        this.setModel( 'adam:latest' );
         this.setModel( 'llama3' );
+        this.setModel( 'ryukk:latest' );
         this.setState( State.IDLE );
         // Pausa la ejecución hasta que se hace clic una única vez en el elemento
+        ui.lock('CLICK ANYWHERE');
         await new Promise(resolve => document.addEventListener('click', resolve, { once: true }));
+        ui.unlock();
         await this.say( "Hola! 😃, mi nombre es Adam Uno.");
-        await this.say( "Listo para operar.");
-
     }
 
     /*  -------------------------------------------------------------
@@ -92,11 +93,19 @@ const Adam = class{
             case State.SLEEPING:
                 this.setFace( Face.SLEEPING );
                 break;
+            case State.SMOKING:
+                this.setFace( Face.SMOKING );
+                break;
             case State.EXPRESSING:
                 break;
             default:
                 return this.setState( State.IDLE );
         }
+    }
+
+    setPhonem( phonem ){
+        this.phonem = phonem ? phonem.toLowerCase() : null;
+        ui.node.avatar.face.setAttribute('aria-phonem', phonem);
     }
 
     setFace( face ){
@@ -195,27 +204,33 @@ const Adam = class{
     //  -----------------------------------------------------------*/
     updateTimer(){ this.timer.value += this.timer.enabled ? 30 : 0;}
     updateTypewriter(){ 
-        if(!this.token){
-            this.phonem = null;
+        if(!this.token || !this.token.audio){
+            this.setPhonem(null);
             return;
         }
+        // Increment Typewriter index
         this.typewriter.timer += this.typewriter.quantum*6; // I dont have any idea why 6 and not 30 here...
-        this.phonem = this.typewriter.timer < this.typewriter.length ? this.token.value[ parseInt(this.typewriter.timer) ] : null;
-        if(this.typewriter.timer >= this.typewriter.length ){
-            // this.token = null;
-            this.typewriter.timer = 0;
-            this.typewriter.length = 0;
-        }
+        const limit  = this.typewriter.length;
+        if( this.typewriter.timer >= limit ) this.typewriter.timer = limit;
+        
+        const value  = this.token.value;
+        const index  = parseInt(this.typewriter.timer);
+        const phonem = index >= limit ? value[ limit - 1 ] 
+                                      : value[   index   ];
+        // const old_phonem = ui.node.avatar.face.getAttribute('aria-phonem');
+        // if( old_phonem != phonem )this.setPhonem( phonem );
+        this.setPhonem( phonem );
+        
     }
 
     async updateSpeech(){
         const is_token = this.consumeToken();
         if(!is_token){
             this.token = null;
+            this.setPhonem(null);
             // this.setState( State.IDLE );
             return null; 
         }
-        ui.debug("1 Token Consumed");
         const token = is_token[0];
         this.token = token;
         if( token.type=='emoji') {
@@ -287,6 +302,7 @@ TYPEWRITER QUANTUM  ${ adam.typewriter.quantum.toFixed(4) }
             case '/love':   return this.setEmotion( Emotion.LOVE );
             case '/cry':    return this.setEmotion( Emotion.SADNESS );
             case '/sleep':  return this.setState( State.SLEEPING );
+            case '/joint':  return this.setState( State.SMOKING );
             default:
                 return null;
         }

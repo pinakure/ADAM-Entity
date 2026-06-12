@@ -119,7 +119,16 @@ body {
 #face[aria-face=SMILE] + span{
     background-image: url('gfx/SMILE.png') !important;
 }
+#face[aria-face=SMOKING]{
+    background-image: url('gfx/SMOKING.png') !important;
+}
+/* Humo */
+#face[aria-face=SMOKING][aria-blink=false] + span,
+#face[aria-face=SMOKING][aria-blink=true] + span {
+    background-image: url('gfx/smoking.gif') !important;
+}
 /* Cambiar parpadeo por zzz.... si está durmiendo */
+#face[aria-status=sleeping][aria-blink=false] + span,
 #face[aria-status=sleeping][aria-blink=true] + span {
     background-image: url('gfx/ZZZ.png') !important;
 }
@@ -138,8 +147,36 @@ body {
 /* ---------------------------------------
 PHONEM OVERRIDES 
 ---------------------------------------*/ 
-#face[aria-status=sleeping][aria-blink=true] + span {
-}
+#face[aria-phonem=a] + span { background-image: url('gfx/A.png') !important; }
+#face[aria-phonem=b] + span { background-image: url('gfx/BV.png') !important; }
+#face[aria-phonem=c] + span { background-image: url('gfx/C.png') !important; }
+#face[aria-phonem=d] + span { background-image: url('gfx/D.png') !important; }
+#face[aria-phonem=e] + span { background-image: url('gfx/E.png') !important; }
+#face[aria-phonem=f] + span { background-image: url('gfx/F.png') !important; }
+#face[aria-phonem=g] + span { background-image: url('gfx/GJ.png') !important; }
+#face[aria-phonem=h] + span { background-image: url('gfx/E.png') !important; }
+#face[aria-phonem=i] + span { background-image: url('gfx/IY.png') !important; }
+#face[aria-phonem=j] + span { background-image: url('gfx/GJ.png') !important; }
+#face[aria-phonem=k] + span { background-image: url('gfx/KQ.png') !important; }
+#face[aria-phonem=l] + span { background-image: url('gfx/LR.png') !important; }
+#face[aria-phonem=m] + span { background-image: url('gfx/M.png') !important; }
+#face[aria-phonem=ñ] + span { background-image: url('gfx/N.png') !important; }
+#face[aria-phonem=n] + span { background-image: url('gfx/N.png') !important; }
+#face[aria-phonem=o] + span { background-image: url('gfx/O.png') !important; }
+#face[aria-phonem=p] + span { background-image: url('gfx/P.png') !important; }
+#face[aria-phonem=q] + span { background-image: url('gfx/KQ.png') !important; }
+#face[aria-phonem=r] + span { background-image: url('gfx/LR.png') !important; }
+#face[aria-phonem=s] + span { background-image: url('gfx/STX.png') !important; }
+#face[aria-phonem=t] + span { background-image: url('gfx/STX.png') !important; }
+#face[aria-phonem=u] + span { background-image: url('gfx/UW.png') !important; }
+#face[aria-phonem=v] + span { background-image: url('gfx/BV.png') !important; }
+#face[aria-phonem=w] + span { background-image: url('gfx/UW.png') !important; }
+#face[aria-phonem=x] + span { background-image: url('gfx/STX.png') !important; }
+#face[aria-phonem=y] + span { background-image: url('gfx/IY.png') !important; }
+#face[aria-phonem=z] + span { background-image: url('gfx/Z.png') !important; }
+
+#face[aria-phonem=' '] + span { background-image: none !important; }
+
 /* ---------------------------------------
               Debug Box 
 ---------------------------------------*/ 
@@ -226,13 +263,14 @@ PHONEM OVERRIDES
     top             : 288px;
     top             : 32px;
     right           : 32px;
-    width           : 25%;
+    max-width       : 25%; 
     height          : 250px;
     font-size       : 12px;
     position        : absolute;
+    overflow-x      : hidden;
     /* overflow-y      : hidden; */
     background      : #0008;
-    padding         : 8px;
+    /* padding         : 8px; */
     border-radius   : 2px ;
     line-height     : 10px;
     font-weight     : 800;

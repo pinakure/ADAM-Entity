@@ -74,11 +74,11 @@ const UI = class{
         }
     }
 
-    lock(){
+    lock(reason){
         this.node.input.value = '';        
         // Bloquear el input mientras se procesa la solicitud
         this.node.input.disabled = true;
-        this.node.input.placeholder = "Esperando respuesta...";
+        this.node.input.placeholder = reason;
     }
 
     unlock(){

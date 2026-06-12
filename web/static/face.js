@@ -1,6 +1,7 @@
 const Face = {
     IDLE     : 'IDLE',
     SLEEPING : 'SLEEP',
+    SMOKING  : 'SMOKING',
     SMILE    : 'SMILE',
     CRY      : 'CRY',
     LOVE     : 'LOVE',

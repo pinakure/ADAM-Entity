@@ -11,7 +11,7 @@ ui.node.input.addEventListener('keydown', async function(event) {
     if (event.key === 'Enter' && this.value.trim() !== '') {
         const prompt = this.value.trim();
         if(prompt[0]=='/') return adam.handleCommand(prompt);
-        ui.lock();
+        ui.lock('GENERANDO RESPUESTA...');
         ui.print(prompt, 'user');
         try {
             ui.print("Thinking", 'temporary');
