@@ -1,6 +1,6 @@
 # ADAM-Entity
 
-ADAM Entity Simulation / AI Agent Integration
+ADAM Entity Simulation / AI Agent Integration, inspired in the Commodore Amiga Alan-1 chatbot software.
 
 Live Demo (Expect high latencies, the LLM model is running on a GPUless server): @ https://adam.iskarion.ddns.net/
 
