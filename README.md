@@ -3,13 +3,13 @@
 ![Python](https://img.shields.io/badge/Python-brown?logo=python)
 ![Django](https://img.shields.io/badge/Django-brown?logo=django)
 ![CSS](https://img.shields.io/badge/css-brown?logo=css)
-![JS](https://img.shields.io/badge/javascript-brown?logo=javascript)
+![javascript](https://img.shields.io/badge/javascript-brown?logo=javascript)
 ![Docker](https://img.shields.io/badge/Docker-brown?logo=docker)
 
 ## Project Description
 ADAM Entity Simulation / AI Agent Integration, inspired in the Commodore Amiga Alan-1 chatbot software.
 
-Live Demo (Expect high latencies, the LLM model is running on a GPUless server): @ https://adam.iskarion.ddns.net/
+Live Demo (Expect high latency, LLM model is running on a GPUless server): @ https://adam.iskarion.ddns.net/
 
 ![snapshot](./snapshot.png)
 
