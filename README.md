@@ -1,6 +1,7 @@
 # ADAM-Entity
 ![STATUS: WIP](https://img.shields.io/badge/status-WIP-yellow)
 ![Python](https://img.shields.io/badge/Python-brown?logo=python)
+![Django](https://img.shields.io/badge/Django-brown?logo=django)
 ![CSS](https://img.shields.io/badge/css-brown?logo=css)
 ![JS](https://img.shields.io/badge/javascript-brown?logo=javascript)
 ![Docker](https://img.shields.io/badge/Docker-brown?logo=docker)
