@@ -18,6 +18,7 @@ const Adam = class{
         this.model      = null;
         this.token      = null;
         this.tokens     = [];
+        this.messages   = [];
         this.api        = new AdamAPI( this );
 
     }
@@ -25,7 +26,7 @@ const Adam = class{
     async initialize(){
         this.setModel( 'adam:latest' );
         this.setModel( 'llama3' );
-        this.setModel( 'ryukk:latest' );
+        // this.setModel( 'ryukk:latest' );
         this.setState( State.IDLE );
         // Pausa la ejecución hasta que se hace clic una única vez en el elemento
         ui.lock('CLICK ANYWHERE');
@@ -152,8 +153,10 @@ const Adam = class{
 
     async think( prompt ){
         this.setState( State.THINKING );
-        const response = await this.api.think( prompt );
-        return response;
+        this.messages.push({ 'role': 'user', 'content' : prompt});
+        const response = await this.api.think( this.messages );
+        this.messages.push({ 'role': 'assistant', 'content' : response.response });
+        return response.response;
     }
 
     async say( text ){
@@ -296,13 +299,14 @@ TYPEWRITER QUANTUM  ${ adam.typewriter.quantum.toFixed(4) }
 
     handleCommand(command){
         ui.node.input.value='';
-        switch(command.toLowerCase()){
-            case '/talk':   return this.setState( State.TALKING );
-            case '/smile':  return this.setEmotion( Emotion.SATISFACTION );
-            case '/love':   return this.setEmotion( Emotion.LOVE );
-            case '/cry':    return this.setEmotion( Emotion.SADNESS );
-            case '/sleep':  return this.setState( State.SLEEPING );
-            case '/joint':  return this.setState( State.SMOKING );
+        switch(command.split(' ')[0].toLowerCase()){
+            case '/talk'    : return this.setState( State.TALKING );
+            case '/smile'   : return this.setEmotion( Emotion.SATISFACTION );
+            case '/love'    : return this.setEmotion( Emotion.LOVE );
+            case '/cry'     : return this.setEmotion( Emotion.SADNESS );
+            case '/sleep'   : return this.setState( State.SLEEPING );
+            case '/joint'   : return this.setState( State.SMOKING );
+            case '/imagine' : return this.api.imagine(command.slice(9));
             default:
                 return null;
         }
